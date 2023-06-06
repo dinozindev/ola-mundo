@@ -1,0 +1,63 @@
+Alternativa para a reutilização do Outlet da PaginaPadrao utilizando children.
+
+- Não usar Routes ou Route no componente Post, apenas envolvendo PostModelo dentro de PaginaPadrao, se tornando o elemento-filho. 
+
+<PaginaPadrao>
+            <PostModelo
+                fotoCapa={`/assets/posts/${post.id}/capa.png`}
+                titulo={post.titulo}
+            >
+                <div className="post-markdown-container">
+                    <ReactMarkdown>
+                        {post.texto}
+                    </ReactMarkdown>
+                </div>
+            </PostModelo>
+        </PaginaPadrao>
+
+- Importar a prop children em PaginaPadrao para que o Outlet possa renderizar o elemento-filho de PaginaPadrao, que é PostModelo. 
+ 
+    export default function PaginaPadrao({ children }) {
+    return (
+        <main>
+            <Banner />
+
+            <Outlet />
+            {children}
+        </main>
+    )
+}
+
+
+-----------------------------------------------------
+
+Reutilizando Outlet através de Routes descendente
+
+// quando a rota de Post for acessada, renderiza o componente de PaginaPadrao juntamente com o componente PostModelo. Quando o post não é encontrado, nenhum dos dois é retornado, apenas o componente NaoEncontrada. Como o Route com o elemento PostModelo conta como rota-filha de PaginaPadrao, o <Outlet> do componente PaginaPadrao conta para ele, portanto estamos reutilizando-o. 
+
+ return (
+        <Routes>
+            <Route path="*" element={<PaginaPadrao />}>
+                <Route index element={<PostModelo
+            fotoCapa={`/assets/posts/${post.id}/capa.png`}
+            titulo={post.titulo}
+        >
+            <div className='post-markdown-container'>
+                <Markdown>
+                    {post.texto}
+                </Markdown>
+            </div>
+        </PostModelo>
+                } />
+            </Route>
+        </Routes>
+    )
+
+    export default function PaginaPadrao() {
+  return (
+    <main>
+        <Banner />
+        <Outlet />
+    </main>
+  )
+}
